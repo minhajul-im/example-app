@@ -1,24 +1,18 @@
+import { useGetBanners } from "@/api/queries/useBanners";
+import { NoDataFound } from "@/components/common/no-data-found";
+import { Skeleton } from "@/components/common/skeleton";
+import { getImageUrl } from "@/helper";
+import { Image } from "lucide-react";
 import Slider from "react-slick";
 
-const images = [
-  {
-    src: "https://plus.unsplash.com/premium_photo-1667912925305-629794bdb691?q=80&w=1121&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    altKey: "productTitle",
-    model: "Ultra HD 4K",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c",
-    altKey: "productTitle",
-    model: "Smart OLED",
-  },
-  {
-    src: "https://images.unsplash.com/photo-1506765515384-028b60a970df?q=80&w=1469&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    altKey: "productTitle",
-    model: "QLED 8K",
-  },
-];
+type BannerType = {
+  photo: string;
+  url: string;
+  position: number;
+};
 
 export const HeroSection = () => {
+  const { data, isLoading } = useGetBanners();
   const settings = {
     dots: true,
     infinite: true,
@@ -42,22 +36,41 @@ export const HeroSection = () => {
     ],
   };
 
+  const banners = (data?.data as BannerType[]) || [];
+
   return (
-    <div className="w-full">
-      <Slider {...settings}>
-        {images?.map((image, index) => (
-          <div key={index} className="relative">
-            <img
-              src={image.src}
-              alt={image.model}
-              className="w-full h-[300px] md:h-[400px] object-cover cursor-grab"
-            />
-            <div className="absolute bottom-4 left-4 bg-black bg-opacity-50 text-white p-2 rounded">
-              <h2 className="text-lg md:text-2xl font-bold">{image.model}</h2>
+    <div className="w-full mt-2">
+      {isLoading ? (
+        <div className="w-full h-[280px] md:h-[360px] bg-gray-200">
+          <Skeleton className="w-full h-full" />
+        </div>
+      ) : (
+        <Slider {...settings}>
+          {banners && banners?.length > 0 ? (
+            banners?.map((banner, index) => (
+              <div key={index} className="relative">
+                {banner?.photo ? (
+                  <div className="relative w-full aspect-[16/5] overflow-hidden">
+                    <img
+                      src={getImageUrl(banner?.photo)}
+                      alt={"banner"}
+                      className="w-full h-full object-cover cursor-grab"
+                    />
+                  </div>
+                ) : (
+                  <div className="w-full h-[280px] flex items-center justify-center md:h-[360px] bg-gray-200">
+                    <Image className="w-16 h-16 text-gray-500" />
+                  </div>
+                )}
+              </div>
+            ))
+          ) : (
+            <div className="w-full h-[280px] flex items-center justify-center md:h-[360px] bg-gray-200">
+              <NoDataFound />
             </div>
-          </div>
-        ))}
-      </Slider>
+          )}
+        </Slider>
+      )}
     </div>
   );
 };

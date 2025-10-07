@@ -1,38 +1,32 @@
 import { useState } from "react";
-import { Heart, ShoppingCart, ClipboardCheck } from "lucide-react";
+import { Heart, ShoppingCart, ClipboardCheck, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { Badge } from "../ui/badge";
+import type { ProductType } from "@/type";
+import { Skeleton } from "../common/skeleton";
+import { getImageUrl } from "@/helper";
 
-interface ProductCardProps {
-  id: string;
-  name: string;
-  price: number;
-  originalPrice?: number;
-  image: string;
-  rating?: number;
-  reviews?: number;
+interface Props {
+  product: ProductType;
 }
 
-export const ProductCard = ({
-  name,
-  price,
-  originalPrice,
-  image,
-  rating = 4.5,
-  reviews = 128,
-}: ProductCardProps) => {
+export const ProductCard = ({ product }: Props) => {
   const [isWishlisted, setIsWishlisted] = useState(false);
 
-  const discount = originalPrice
-    ? Math.round(((originalPrice - price) / originalPrice) * 100)
+  const discount = product.has_discount
+    ? Math.round(
+        ((parseFloat(product.stroked_price) - parseFloat(product.main_price)) /
+          parseFloat(product.stroked_price)) *
+          100
+      )
     : 0;
 
   return (
     <div className="group relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
       <button
         onClick={() => setIsWishlisted(!isWishlisted)}
-        className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm transition-all hover:bg-background hover:scale-110 cursor-pointer"
+        className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-accent backdrop-blur-sm transition-all hover:bg-background hover:scale-110 cursor-pointer"
         aria-label="Add to wishlist">
         <Heart
           className={cn(
@@ -51,11 +45,17 @@ export const ProductCard = ({
       )}
 
       <div className="relative aspect-[16/12] overflow-hidden bg-muted">
-        <img
-          src={image || "/placeholder.svg"}
-          alt={name}
-          className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-        />
+        {product?.thumbnail_image ? (
+          <img
+            src={getImageUrl(product?.thumbnail_image) || "/placeholder.svg"}
+            alt={product?.name}
+            className="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+          />
+        ) : (
+          <div className="w-full h-full bg-muted flex items-center justify-center">
+            <Image className="w-6 h-6 text-muted" />
+          </div>
+        )}
       </div>
 
       <div className="p-3">
@@ -66,7 +66,7 @@ export const ProductCard = ({
                 key={i}
                 className={cn(
                   "h-4 w-4",
-                  i < Math.floor(rating)
+                  i < Math.floor(product.rating)
                     ? "fill-yellow-400 text-yellow-400"
                     : "fill-muted text-muted"
                 )}
@@ -76,20 +76,22 @@ export const ProductCard = ({
               </svg>
             ))}
           </div>
-          <span className="text-xs text-muted-foreground">({reviews})</span>
+          <span className="text-xs text-muted-foreground">
+            ({product?.sales})
+          </span>
         </div>
 
         <h3 className="line-clamp-1 text-sm font-medium leading-tight text-foreground duration-300">
-          {name}
+          {product?.name}
         </h3>
 
         <div className="mb-2 flex items-center gap-2 duration-300">
           <span className="text-lg font-bold text-foreground">
-            ${price.toFixed(2)}
+            {product?.main_price}
           </span>
-          {originalPrice && (
+          {product.has_discount && (
             <span className="text-sm text-muted-foreground line-through">
-              ${originalPrice.toFixed(2)}
+              {product?.stroked_price}
             </span>
           )}
         </div>
@@ -103,6 +105,46 @@ export const ProductCard = ({
             <ClipboardCheck className="h-3 w-3" />
             Checkout
           </Button>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const ProductCardSkeleton = () => {
+  return (
+    <div className="group relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
+      <div className="absolute right-2 top-2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-background/80 backdrop-blur-sm">
+        <Skeleton className="h-4 w-4 rounded-full" />
+      </div>
+      <div className="absolute left-2 top-2 z-10">
+        <Skeleton className="h-5 w-8 rounded-full" />
+      </div>
+
+      <div className="relative aspect-[16/12] overflow-hidden bg-muted">
+        <Skeleton className="h-full w-full" />
+      </div>
+
+      <div className="p-3">
+        <div className="mb-2 flex items-center gap-1">
+          <div className="flex items-center gap-1">
+            {[...Array(5)].map((_, i) => (
+              <Skeleton key={i} className="h-4 w-4" />
+            ))}
+          </div>
+          <Skeleton className="h-3 w-8" />
+        </div>
+
+        <Skeleton className="h-4 w-full mb-2" />
+
+        <div className="mb-2 flex items-center gap-2">
+          <Skeleton className="h-6 w-16" />
+          <Skeleton className="h-4 w-12" />
+        </div>
+
+        <div className="flex gap-2">
+          <Skeleton className="flex-1 h-8" />
+          <Skeleton className="flex-1 h-8" />
         </div>
       </div>
     </div>

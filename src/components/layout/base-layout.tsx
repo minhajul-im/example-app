@@ -1,6 +1,6 @@
 import { Footer } from "./footer";
 import { Header } from "./header";
-import { SearchSection } from "./search";
+import { ActionSearchBar } from "./search";
 import { MegaMenu } from "./mega-menu";
 
 interface Props {
@@ -13,7 +13,7 @@ export const BaseLayout = ({ children, isContainer = true }: Props) => {
       <Header />
       <div className="md:hidden z-50 bg-background sticky top-0 py-2">
         <div className="mx-2 flex flex-1 justify-center items-center">
-          <SearchSection />
+          <ActionSearchBar />
         </div>
       </div>
 

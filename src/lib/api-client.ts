@@ -1,6 +1,5 @@
+import { BASE_URL } from "@/constant";
 import axios from "axios";
-
-const BASE_URL = "https://api.example.com";
 
 const apiClient = axios.create({
   baseURL: BASE_URL,
@@ -8,18 +7,16 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    config.headers["Content-Type"] = "multipart/form-data";
-
     if (config.data instanceof FormData) {
+      config.headers["Content-Type"] = "multipart/form-data";
     } else {
       config.headers["Content-Type"] = "application/json";
     }
 
-    const token = null;
-
-    if (token) {
-      config.headers["Authorization"] = `Bearer ${token}`;
-    }
+    // const token = null;
+    // if (token) {
+    //   config.headers["Authorization"] = `Bearer ${token}`;
+    // }
 
     return config;
   },

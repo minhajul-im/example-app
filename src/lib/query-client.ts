@@ -4,6 +4,7 @@ export const queryOptions = {
   staleTime: 30 * 60 * 1000,
   gcTime: 24 * 60 * 60 * 1000,
   refetchOnWindowFocus: false,
+  retry: 3,
   refetchOnReconnect: false,
   refetchOnMount: false,
 };

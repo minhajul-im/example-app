@@ -182,9 +182,9 @@ export const MegaMenu = () => {
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
 
   return (
-    <nav className="relative">
-      <div className="container mx-auto px-4">
-        <ul className="flex items-center overflow-x-auto gap-8 py-4">
+    <nav className="relative border border-border">
+      <div className="container mx-auto">
+        <ul className="flex items-center overflow-x-auto gap-8 py-2">
           {menuData.map((item) => (
             <li
               key={item.name}
@@ -198,14 +198,14 @@ export const MegaMenu = () => {
               ) : (
                 <a
                   href={item.href}
-                  className="font-medium hover:text-pri transition-colors hover:underline cursor-pointer">
+                  className="font-medium hover:text-pri transition-colors hover:text-primary hover:underline cursor-pointer">
                   {item.name}
                   {item.href}
                 </a>
               )}
 
               {item?.submenu && activeMenu === item.name && (
-                <div className="fixed left-0 right-0 top-[105px] z-50 flex justify-center px-4">
+                <div className="fixed left-0 right-0 top-[98px] z-50 flex justify-center px-4">
                   <div className="bg-background border shadow-xl rounded w-full max-w-[1200px] max-h-[600px] overflow-y-auto">
                     <div className="p-8 flex gap-8">
                       <div className="flex gap-8 flex-1 min-w-0">
@@ -219,10 +219,10 @@ export const MegaMenu = () => {
                                 <li key={linkIdx}>
                                   <a
                                     href={link.href}
-                                    className={`text-sm hover:underline block ${
+                                    className={`text-sm hover:underline hover:text-primary block ${
                                       link.highlight
                                         ? "text-primary font-semibold"
-                                        : "text-gray-700"
+                                        : "text-muted-foreground"
                                     }`}>
                                     {link.name}
                                   </a>
