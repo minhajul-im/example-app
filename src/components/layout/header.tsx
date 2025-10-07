@@ -1,13 +1,4 @@
-import {
-  Heart,
-  User,
-  ShoppingBag,
-  LogOut,
-  List,
-  Settings,
-  LayoutDashboard,
-  Menu,
-} from "lucide-react";
+import { Heart, ShoppingBag, Menu } from "lucide-react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../ui/button";
 import {
@@ -17,26 +8,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { useState } from "react";
-import { SearchSection } from "./search";
+import { ActionSearchBar } from "./search";
 import { MobileMenu } from "./mobile-menu";
+
+import { UserProfile } from "./user";
 
 export const Header = () => {
   const { i18n, t } = useTranslation();
-  const [isLogin, setIsLogin] = useState(false);
 
   const handleLanguageChange = (language: string) => {
     i18n.changeLanguage(language);
   };
 
   return (
-    <header className="h-14 md:h-16 flex items-center justify-center w-full bg-background px-4">
+    <header className="h-14 md:h-16 flex items-center justify-center w-full bg-background px-1 md:px-0 sticky top-0 z-50">
       <div className="container flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 justify-start">
           <MobileMenu>
@@ -52,7 +37,7 @@ export const Header = () => {
         </div>
 
         <div className="hidden md:flex flex-1 justify-center items-center">
-          <SearchSection />
+          <ActionSearchBar />
         </div>
 
         <div className="flex items-center gap-3 w-full md:w-auto justify-end">
@@ -81,47 +66,7 @@ export const Header = () => {
             <span className="sr-only">Shopping Cart</span>
           </Button>
 
-          {isLogin ? (
-            <DropdownMenu>
-              <DropdownMenuTrigger>
-                <Button
-                  variant="ghost"
-                  size="icon-lg"
-                  className="focus:outline-none">
-                  <User className="h-6 w-6" />
-                  <span className="sr-only">User Profile</span>
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56">
-                <DropdownMenuItem>
-                  <User className="h-6 w-6" /> Profile
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <LayoutDashboard className="h-6 w-6" /> Dashboard
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Heart className="h-6 w-6" /> Wishlist
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <ShoppingBag className="h-6 w-6" /> Cart
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <List className="h-6 w-6" /> Orders
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  <Settings className="h-6 w-6" /> Settings
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => setIsLogin(false)}
-                  variant="destructive">
-                  <LogOut className="h-6 w-6 " />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          ) : (
-            <Button onClick={() => setIsLogin(true)}>Sign In</Button>
-          )}
+          <UserProfile />
         </div>
       </div>
     </header>

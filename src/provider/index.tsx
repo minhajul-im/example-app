@@ -10,6 +10,7 @@ import { queryClient } from "../lib/query-client";
 import { persistor, store } from "../redux/store";
 import { HelmetProvider } from "react-helmet-async";
 import { I18nextProvider } from "react-i18next";
+import { Toaster } from "react-hot-toast";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -18,7 +19,10 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
         <PersistGate loading={null} persistor={persistor}>
           <QueryClientProvider client={queryClient}>
             <I18nextProvider i18n={i18next}>
-              <BrowserRouter>{children}</BrowserRouter>
+              <BrowserRouter>
+                <Toaster />
+                {children}
+              </BrowserRouter>
             </I18nextProvider>
           </QueryClientProvider>
         </PersistGate>
