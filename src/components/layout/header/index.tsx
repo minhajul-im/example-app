@@ -1,27 +1,20 @@
-import { Heart, ShoppingBag, Menu } from "lucide-react";
-import { useTranslation } from "react-i18next";
-import { Button } from "../ui/button";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import { ActionSearchBar } from "./search";
+import { Heart, ShoppingBag, Menu, Image } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useConfig } from "@/hooks/use-config";
+import { getConfig, getImageUrl } from "@/helper";
+import { Button } from "@/components/ui/button";
 import { MobileMenu } from "./mobile-menu";
-
+import { ActionSearchBar } from "./search";
+import { LanguageSwitcher } from "./language";
 import { UserProfile } from "./user";
 
 export const Header = () => {
-  const { i18n, t } = useTranslation();
+  const config = useConfig();
 
-  const handleLanguageChange = (language: string) => {
-    i18n.changeLanguage(language);
-  };
+  const logo = getConfig(config, "header_logo")?.value;
 
   return (
-    <header className="h-14 md:h-16 flex items-center justify-center w-full bg-background px-1 md:px-0 sticky top-0 z-50">
+    <header className="h-14 md:h-16 flex items-center justify-center w-full bg-background px-1 md:px-0">
       <div className="container flex items-center justify-between gap-4">
         <div className="flex items-center gap-3 justify-start">
           <MobileMenu>
@@ -31,9 +24,21 @@ export const Header = () => {
             </Button>
           </MobileMenu>
 
-          <h4 className="font-bold text-lg text-primary text-nowrap">
-            {t("web_care")}
-          </h4>
+          <Link to="/">
+            <div className="w-20 h-12 relative overflow-hidden">
+              {logo ? (
+                <img
+                  src={getImageUrl(logo as string)}
+                  alt="logo"
+                  className="absolute w-full h-full object-cover"
+                />
+              ) : (
+                <div className="absolute w-full h-full flex items-center justify-center">
+                  <Image className="w-6 h-6 text-primary" />
+                </div>
+              )}
+            </div>
+          </Link>
         </div>
 
         <div className="hidden md:flex flex-1 justify-center items-center">
@@ -42,15 +47,7 @@ export const Header = () => {
 
         <div className="flex items-center gap-3 w-full md:w-auto justify-end">
           <div className="hidden md:block">
-            <Select value={i18n.language} onValueChange={handleLanguageChange}>
-              <SelectTrigger className="w-24">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="en">English</SelectItem>
-                <SelectItem value="bn">বাংলা</SelectItem>
-              </SelectContent>
-            </Select>
+            <LanguageSwitcher />
           </div>
 
           <Button

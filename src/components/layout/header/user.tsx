@@ -7,15 +7,15 @@ import {
   ShoppingBag,
   User,
 } from "lucide-react";
-import { Button } from "../ui/button";
+import { Button } from "../../ui/button";
 import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { DropdownMenu } from "../ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
+import { DropdownMenu } from "../../ui/dropdown-menu";
 import { Link } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
 
 export const UserProfile = () => {
   return (

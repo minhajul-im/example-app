@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
-import { Search, Send, MoveUpRight, SearchX } from "lucide-react";
+import { Search, Send, MoveUpRight } from "lucide-react";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useSearchSuggestion } from "@/api/queries/useSearchSuggestion";
 import { useNavigate } from "react-router-dom";
@@ -147,7 +147,7 @@ export const ActionSearchBar = () => {
   const handleSearch = (action: ActionType) => {
     if (!action?.query) return;
     navigate(
-      `/search?query_key=${action?.query}${
+      `/search?query=${action?.query}${
         action?.type?.trim() ? `&type=${action?.type}` : ""
       }`
     );
@@ -210,7 +210,7 @@ export const ActionSearchBar = () => {
               animate="show"
               exit="exit">
               <motion.ul>
-                {result?.actions?.length > 0 ? (
+                {result?.actions?.length > 0 &&
                   result?.actions?.map((action: ActionType) => (
                     <motion.li
                       key={action?.id}
@@ -224,19 +224,7 @@ export const ActionSearchBar = () => {
 
                       <MoveUpRight className="w-4 h-4 font-bold text-muted-foreground" />
                     </motion.li>
-                  ))
-                ) : (
-                  <motion.li
-                    key={"no-result"}
-                    className="px-3 py-2 flex items-center justify-center"
-                    variants={item}
-                    layout>
-                    <SearchX className="w-4 h-4 font-bold text-muted-foreground" />
-                    <span className="text-sm font-medium text-muted-foreground">
-                      No result found
-                    </span>
-                  </motion.li>
-                )}
+                  ))}
               </motion.ul>
             </motion.div>
           )}

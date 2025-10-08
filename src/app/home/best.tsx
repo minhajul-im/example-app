@@ -4,13 +4,22 @@ import { CardLayout } from "@/components/common/card-layout";
 import { SectionTitle } from "@/components/common/section-title";
 import { ProductCard, ProductCardSkeleton } from "@/components/card/product";
 import type { ProductType } from "@/type";
+import { useConfig } from "@/hooks/use-config";
+import { getConfig } from "@/helper";
 
 export const BestSellerSection = () => {
   const { data, isLoading } = useGetProducts("best-seller");
 
+  const config = useConfig();
+  const isShow = getConfig(config, "best_selling")?.value as string;
+
   const products = (data?.data as ProductType[]) || [];
-  return (
-    <section className="mb-10 md:mb-20 container mx-auto">
+
+  return isShow ? (
+    <section
+      className={`mb-10 md:mb-20 container mx-auto  ${
+        products?.length === 0 && !isLoading && "hidden"
+      }`}>
       <SectionTitle title="Best Sellers" />
       <CardLayout>
         {isLoading
@@ -29,5 +38,5 @@ export const BestSellerSection = () => {
             ))}
       </CardLayout>
     </section>
-  );
+  ) : null;
 };

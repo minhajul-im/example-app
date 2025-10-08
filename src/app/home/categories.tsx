@@ -1,10 +1,10 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { useGetCategories } from "@/api/queries/useCategories";
 import { getImageUrl, slugify } from "@/helper";
 import { Image } from "lucide-react";
 import { Skeleton } from "@/components/common/skeleton";
+import { useCategories } from "@/api/queries/useCategories";
 
 interface CategoryType {
   id: number;
@@ -19,7 +19,7 @@ interface CategoryType {
 }
 
 export const CategoriesSection = () => {
-  const { data, isLoading } = useGetCategories();
+  const { data, isLoading } = useCategories();
 
   const categories = (data?.data as CategoryType[]) || [];
 

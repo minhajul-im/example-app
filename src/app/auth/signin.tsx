@@ -67,7 +67,9 @@ export const SignInPage = () => {
                     />
                   </Field>
                   <Field>
-                    <Button type="submit">Sign in</Button>
+                    <Button type="submit" size="lg">
+                      Sign in
+                    </Button>
                     <FieldDescription className="text-center">
                       Don&apos;t have an account?
                       <Link to="/signup" className="text-primary ml-1   ">

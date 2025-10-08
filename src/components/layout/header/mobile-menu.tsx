@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ChevronRight, ChevronLeft, Heart, Package } from "lucide-react";
+import { ChevronRight, ChevronLeft, Heart, Package, Image } from "lucide-react";
 import {
   Sheet,
   SheetContent,
@@ -10,151 +10,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
-import { useTranslation } from "react-i18next";
 
-type MenuItem = {
-  name: string;
-  href?: string;
-  icon?: string;
-  submenu?: {
-    columns: {
-      title: string;
-      links: { name: string; href: string; highlight?: boolean }[];
-    }[];
-    promos?: {
-      image: string;
-      title: string;
-      link: string;
-    }[];
+import { useConfig } from "@/hooks/use-config";
+import { getConfig, getImageUrl } from "@/helper";
+import { Link } from "react-router-dom";
+import { LanguageSwitcher } from "./language";
+import { useMenuData } from "./useMenu";
+import type { MenuItemType } from "./useMenu";
+
+// Simple icon mapping for categories
+const getCategoryIcon = (categoryName: string): string => {
+  const iconMap: { [key: string]: string } = {
+    "Women's Clothing & Fashion": "👗",
+    "Men's Clothing & Fashion": "👔",
+    "Smart Phone & Accessorise": "📱",
+    "Computer & Accessorise": "💻",
+    "TV & Home Appliance": "📺",
+    "DSLR & CCTV Camera": "📷",
+    "অটোমোবাইল এবং মোটরসাইকেল": "🚗",
+    "Kids & Toy": "🧸",
+    "Sports & Outdoor": "⚽",
+    "Jewelley & Watch": "💍",
+    "Home Decoration": "🏠",
+    Grocery: "🛒",
   };
+
+  return iconMap[categoryName] || "📦";
 };
 
-const menuData: MenuItem[] = [
-  {
-    name: "Furniture",
-    icon: "🪑",
-    submenu: {
-      columns: [
-        {
-          title: "Furniture Sale",
-          links: [
-            {
-              name: "Furniture Sale",
-              href: "/furniture-sale",
-              highlight: true,
-            },
-          ],
-        },
-        {
-          title: "Living Room",
-          links: [
-            { name: "Living Room Furniture", href: "/living-room" },
-            { name: "Office Furniture", href: "/office" },
-            { name: "Bedroom Furniture", href: "/bedroom" },
-            { name: "Entry & Mudroom Furniture", href: "/entry" },
-          ],
-        },
-      ],
-      promos: [
-        {
-          image:
-            "https://images.unsplash.com/photo-1753087379508-890a78f0c463?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          title: "Make a merry bed.",
-          link: "/bedroom-decor",
-        },
-        {
-          image:
-            "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=400&fit=crop",
-          title: "Boost your bathroom. Shop stylish storage.",
-          link: "/bathroom-storage",
-        },
-      ],
-    },
-  },
-  {
-    name: "Outdoor",
-    icon: "🌳",
-    submenu: {
-      columns: [
-        {
-          title: "Outdoor Furniture",
-          links: [
-            { name: "Patio Furniture", href: "/patio" },
-            { name: "Outdoor Decor", href: "/outdoor-decor" },
-            { name: "Grills & Outdoor Cooking", href: "/grills" },
-          ],
-        },
-      ],
-    },
-  },
-  {
-    name: "Bedding & Bath",
-    icon: "🛏️",
-    submenu: {
-      columns: [
-        {
-          title: "Bedding",
-          links: [
-            { name: "Bedding & Bedding Sets", href: "/bedding-sets" },
-            { name: "Throw Pillows", href: "/throw-pillows" },
-            { name: "Sheets & Pillowcases", href: "/sheets" },
-          ],
-        },
-        {
-          title: "Bath",
-          links: [
-            { name: "Bath Towels & Sets", href: "/bath-towels" },
-            { name: "Bath Rugs & Mats", href: "/bath-rugs" },
-            { name: "Bathroom Organization", href: "/bathroom-organization" },
-          ],
-        },
-      ],
-      promos: [
-        {
-          image:
-            "https://images.unsplash.com/photo-1753087379508-890a78f0c463?q=80&w=687&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-          title: "Make a merry bed.",
-          link: "/bedroom-decor",
-        },
-        {
-          image:
-            "https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?w=600&h=400&fit=crop",
-          title: "Boost your bathroom. Shop stylish storage.",
-          link: "/bathroom-storage",
-        },
-      ],
-    },
-  },
-  {
-    name: "Rugs",
-    icon: "🧶",
-    href: "/rugs",
-  },
-  {
-    name: "Decor & Pillows",
-    icon: "🖼️",
-    submenu: {
-      columns: [
-        {
-          title: "Wall Decor",
-          links: [
-            { name: "Wall Art", href: "/wall-art" },
-            { name: "Mirrors", href: "/mirrors" },
-            { name: "Wall Shelves", href: "/wall-shelves" },
-          ],
-        },
-      ],
-    },
-  },
-];
-
 export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
-  const { t } = useTranslation();
+  const config = useConfig();
+  const logo = getConfig(config, "header_logo")?.value;
+  const { menuData, isLoading, error } = useMenuData();
   const [isOpen, setIsOpen] = useState(false);
   const [currentView, setCurrentView] = useState<"main" | string>("main");
-  const [activeSubmenu, setActiveSubmenu] = useState<MenuItem | null>(null);
+  const [activeSubmenu, setActiveSubmenu] = useState<MenuItemType | null>(null);
 
-  const openSubmenu = (item: MenuItem) => {
+  const openSubmenu = (item: MenuItemType) => {
     setActiveSubmenu(item);
     setCurrentView(item.name);
   };
@@ -177,14 +69,25 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
       <SheetContent side="left" className="w-80 p-0">
         <SheetHeader className="p-4 border-b">
           <SheetTitle className="flex items-center justify-start gap-2">
-            <h4 className="font-bold text-lg text-primary text-nowrap">
-              {t("web_care")}
-            </h4>
+            <Link to="/">
+              <div className="w-20 h-12 relative overflow-hidden">
+                {logo ? (
+                  <img
+                    src={getImageUrl(logo as string)}
+                    alt="logo"
+                    className="absolute w-full h-full object-cover"
+                  />
+                ) : (
+                  <div className="absolute w-full h-full flex items-center justify-center">
+                    <Image className="w-6 h-6 text-primary" />
+                  </div>
+                )}
+              </div>
+            </Link>
           </SheetTitle>
         </SheetHeader>
 
         <ScrollArea className="h-[calc(100vh-73px)]">
-          {/* Main menu view */}
           {currentView === "main" && (
             <div>
               <ul className="flex flex-col gap-2 px-4">
@@ -198,6 +101,9 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
                       <span>Lists</span>
                     </a>
                   </Button>
+                </li>
+                <li>
+                  <LanguageSwitcher />
                 </li>
                 <li>
                   <Button
@@ -214,39 +120,58 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
 
               <Separator />
 
-              {/* Departments */}
               <div className="p-4">
                 <h3 className="font-bold text-lg mb-3">Departments</h3>
-                <ul className="space-y-1">
-                  {menuData?.map((item: MenuItem) => (
-                    <li key={item.name}>
-                      {item.submenu ? (
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-between h-auto py-3"
-                          onClick={() => openSubmenu(item)}>
-                          <div className="flex items-center gap-3">
-                            <span className="text-2xl">{item?.icon}</span>
-                            <span className="font-medium">{item?.name}</span>
-                          </div>
-                          <ChevronRight className="h-5 w-5 text-muted-foreground" />
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="ghost"
-                          className="w-full justify-between h-auto py-3"
-                          asChild>
-                          <a href={item?.href} onClick={closeMenu}>
+                {isLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-pulse text-muted-foreground">
+                      Loading categories...
+                    </div>
+                  </div>
+                ) : error ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="text-red-500">
+                      Failed to load categories
+                    </div>
+                  </div>
+                ) : (
+                  <ul className="space-y-1">
+                    {menuData?.map((item: MenuItemType) => (
+                      <li key={item.name}>
+                        {item.submenu ? (
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-between h-auto py-3"
+                            onClick={() => openSubmenu(item)}>
                             <div className="flex items-center gap-3">
-                              <span className="text-2xl">{item?.icon}</span>
+                              <span className="text-2xl">
+                                {getCategoryIcon(item?.name)}
+                              </span>
                               <span className="font-medium">{item?.name}</span>
                             </div>
-                          </a>
-                        </Button>
-                      )}
-                    </li>
-                  ))}
-                </ul>
+                            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+                          </Button>
+                        ) : (
+                          <Button
+                            variant="ghost"
+                            className="w-full justify-between h-auto py-3"
+                            asChild>
+                            <Link to={item?.href || "#"} onClick={closeMenu}>
+                              <div className="flex items-center gap-3">
+                                <span className="text-2xl">
+                                  {getCategoryIcon(item?.name)}
+                                </span>
+                                <span className="font-medium">
+                                  {item?.name}
+                                </span>
+                              </div>
+                            </Link>
+                          </Button>
+                        )}
+                      </li>
+                    ))}
+                  </ul>
+                )}
               </div>
 
               {/* Sign in button */}
@@ -278,12 +203,12 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
                 <h2 className="font-bold text-xl line-clamp-1">
                   {activeSubmenu?.name}
                 </h2>
-                <a
-                  href={"/"}
+                <Link
+                  to={"/"}
                   className="text-primary font-semibold text-sm hover:underline"
                   onClick={closeMenu}>
                   See All
-                </a>
+                </Link>
               </div>
               <Separator />
 
@@ -306,7 +231,7 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
                                 : ""
                             }`}
                             asChild>
-                            <a href={link?.href} onClick={closeMenu}>
+                            <Link to={link?.href} onClick={closeMenu}>
                               <div className="flex items-center gap-3">
                                 {link?.highlight && (
                                   <span className="bg-red-100 text-destructive text-xs font-semibold px-2 py-1 rounded">
@@ -322,7 +247,7 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
                                   {link?.name}
                                 </span>
                               </div>
-                            </a>
+                            </Link>
                           </Button>
                         </li>
                       ))}
@@ -332,7 +257,7 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
                 {activeSubmenu?.submenu?.promos && (
                   <div className="space-y-4">
                     {activeSubmenu?.submenu?.promos?.map((promo, idx) => (
-                      <a key={idx} href={promo?.link} className="block group">
+                      <Link key={idx} to={promo?.link} className="block group">
                         <div className="relative overflow-hidden w-full h-36 rounded-lg">
                           <img
                             src={promo?.image || "/placeholder.svg"}
@@ -346,7 +271,7 @@ export const MobileMenu = ({ children }: { children: React.ReactNode }) => {
                             </p>
                           </div>
                         </div>
-                      </a>
+                      </Link>
                     ))}
                   </div>
                 )}

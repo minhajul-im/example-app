@@ -3,11 +3,14 @@ import { useQuery } from "@tanstack/react-query";
 import type { QueryType } from "../utils/type";
 import { useNavigate, useParams } from "react-router-dom";
 
-export const useGetProducts = (type: string): QueryType => {
+export const useGetProducts = (
+  type: string,
+  params: Record<string, unknown> = {}
+): QueryType => {
   const { data, isLoading, error } = useQuery({
-    queryKey: ["get_products", type],
+    queryKey: ["get_products", type, params],
     queryFn: async () => {
-      const response = await apiClient.get(`/products/${type}`);
+      const response = await apiClient.get(`/products/${type}`, { params });
       return response.data;
     },
   });
