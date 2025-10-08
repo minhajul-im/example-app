@@ -1,25 +1,27 @@
-import { useGetProductsByCategory } from "@/api/queries/useProducts";
+import { useGetProducts } from "@/api/queries/useProducts";
 import type { ProductType } from "@/type";
 import { SectionTitle } from "@/components/common/section-title";
 import { CardLayout } from "@/components/common/card-layout";
 import { ProductCard, ProductCardSkeleton } from "@/components/card/product";
-import { useParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { AnimationWrapper } from "@/components/common/animation-wrapper";
 import { NoDataFound } from "@/components/common/no-data-found";
-import { slugifyToTitle } from "@/helper";
 import { BaseLayout } from "@/components/layout/base-layout";
 
-export const CategoriesPage = () => {
-  const { name } = useParams();
+export const SearchPage = () => {
+  const [searchParams] = useSearchParams();
+  const type = searchParams.get("type") || "";
+  const query = searchParams.get("query") || "";
+  const params = { query_key: query, ...(type.trim() ? { type } : {}) };
 
-  const { data, isLoading } = useGetProductsByCategory();
+  const { data, isLoading } = useGetProducts("search", params);
 
   const products = (data?.data as ProductType[]) || [];
 
   return (
     <BaseLayout>
       <section className="mb-10 md:mb-20 container mx-auto mt-10">
-        <SectionTitle title={slugifyToTitle(name as string)} />
+        <SectionTitle title={`Search results for "${query?.toUpperCase()}"`} />
         <CardLayout>
           {isLoading ? (
             Array.from({ length: 10 }).map((_, i) => (
@@ -37,7 +39,7 @@ export const CategoriesPage = () => {
               </AnimationWrapper>
             ))
           ) : (
-            <div className="col-span-5">
+            <div className="col-span-1">
               <NoDataFound title="No products found" />
             </div>
           )}

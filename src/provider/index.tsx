@@ -2,6 +2,7 @@ import React from "react";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import i18next from "@/lib/i18n";
+import { SeoProvider } from "./seo";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router";
 import { PersistGate } from "redux-persist/integration/react";
@@ -11,6 +12,7 @@ import { persistor, store } from "../redux/store";
 import { HelmetProvider } from "react-helmet-async";
 import { I18nextProvider } from "react-i18next";
 import { Toaster } from "react-hot-toast";
+import { ConfigProvider } from "./config";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -20,8 +22,12 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
           <QueryClientProvider client={queryClient}>
             <I18nextProvider i18n={i18next}>
               <BrowserRouter>
-                <Toaster />
-                {children}
+                <ConfigProvider>
+                  <SeoProvider>
+                    <Toaster />
+                    {children}
+                  </SeoProvider>
+                </ConfigProvider>
               </BrowserRouter>
             </I18nextProvider>
           </QueryClientProvider>

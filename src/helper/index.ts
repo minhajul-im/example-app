@@ -1,4 +1,5 @@
 import { IMAGE_URL } from "@/constant";
+import type { ConfigType } from "@/hooks/use-config";
 
 export const getImageUrl = (url: string) => {
   return `${IMAGE_URL}${url}`;
@@ -38,4 +39,11 @@ export const slugifyToTitle = (slug: string): string => {
   return words
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(" ");
+};
+
+export const getConfig = (config: ConfigType[] = [], key: string) => {
+  if (!config || !key) return null;
+
+  const result = config?.find((item) => item.type === key);
+  return result;
 };

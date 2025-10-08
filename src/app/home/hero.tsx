@@ -1,7 +1,8 @@
 import { useGetBanners } from "@/api/queries/useBanners";
 import { NoDataFound } from "@/components/common/no-data-found";
 import { Skeleton } from "@/components/common/skeleton";
-import { getImageUrl } from "@/helper";
+import { getConfig, getImageUrl } from "@/helper";
+import { useConfig } from "@/hooks/use-config";
 import { Image } from "lucide-react";
 import Slider from "react-slick";
 
@@ -11,8 +12,19 @@ type BannerType = {
   position: number;
 };
 
+type TypeData = string[] | [];
+
 export const HeroSection = () => {
   const { data, isLoading } = useGetBanners();
+
+  const config = useConfig();
+  const images =
+    (getConfig(config, "home_slider_images")?.value as TypeData) || [];
+  const links =
+    (getConfig(config, "home_slider_links")?.value as TypeData) || [];
+
+  console.log(images, links, data);
+
   const settings = {
     dots: true,
     infinite: true,

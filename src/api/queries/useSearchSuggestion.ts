@@ -9,6 +9,8 @@ export const useSearchSuggestion = (): QueryType => {
       const response = await apiClient.get("/get-search-suggestions");
       return response.data;
     },
+    staleTime: 1000 * 60 * 60,
+    gcTime: 1000 * 60 * 60,
   });
 
   return { data, isLoading, error };

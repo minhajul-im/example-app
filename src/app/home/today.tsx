@@ -10,8 +10,12 @@ export const TodaysDealSection = () => {
   const { data, isLoading } = useGetProducts("todays-deal");
 
   const products = (data?.data as ProductType[]) || [];
+
   return (
-    <section className="mb-10 md:mb-20 container mx-auto">
+    <section
+      className={`mb-10 md:mb-20 container mx-auto ${
+        products?.length === 0 && !isLoading && "hidden"
+      }`}>
       <SectionTitle title="Today's Deal" />
       <CardLayout>
         {isLoading ? (
