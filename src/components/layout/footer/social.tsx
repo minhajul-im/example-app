@@ -1,5 +1,5 @@
 import { getConfig } from "@/helper";
-import { useConfig } from "@/hooks/use-config";
+import { useConfig } from "@/hooks/useConfig";
 import { Facebook, Twitter, Instagram, Youtube, Linkedin } from "lucide-react";
 import { Link } from "react-router-dom";
 

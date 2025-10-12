@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 
-import { useConfig } from "@/hooks/use-config";
+import { useConfig } from "@/hooks/useConfig";
 import { getConfig, getImageUrl } from "@/helper";
 import { Link } from "react-router-dom";
 import { LanguageSwitcher } from "./language";

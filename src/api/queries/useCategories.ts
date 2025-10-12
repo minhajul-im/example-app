@@ -11,6 +11,10 @@ export const useCategories = (): QueryType => {
     },
     staleTime: 1000 * 60 * 30,
     gcTime: 1000 * 60 * 30,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    refetchOnMount: false,
+    retry: 3,
   });
 
   return { data, isLoading, error };

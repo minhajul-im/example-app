@@ -13,10 +13,10 @@ apiClient.interceptors.request.use(
       config.headers["Content-Type"] = "application/json";
     }
 
-    // const token = null;
-    // if (token) {
-    //   config.headers["Authorization"] = `Bearer ${token}`;
-    // }
+    const token = localStorage.getItem("token") || null;
+    if (token) {
+      config.headers["Authorization"] = `Bearer ${token}`;
+    }
 
     return config;
   },

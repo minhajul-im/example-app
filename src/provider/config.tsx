@@ -1,6 +1,6 @@
 import { useGetConfig } from "@/api/queries/useGetConfig";
 import { AnimationLoading } from "@/components/common/animation-loading";
-import { ConfigContext, type ConfigType } from "@/hooks/use-config";
+import { ConfigContext, type ConfigType } from "@/hooks/useConfig";
 import { useNavigate } from "react-router-dom";
 
 export const ConfigProvider = ({ children }: { children: React.ReactNode }) => {

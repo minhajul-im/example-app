@@ -54,7 +54,8 @@ export const ModalWrapper = forwardRef<ModalWrapperRef, ModalWrapperProps>(
       <AnimatePresence>
         {isOpen && (
           <motion.div
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-md"
+            style={{ zIndex: 9999 }}
+            className="fixed inset-0 flex items-center justify-center bg-black/50 backdrop-blur-md"
             onClick={handleClose}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -73,7 +74,7 @@ export const ModalWrapper = forwardRef<ModalWrapperRef, ModalWrapperProps>(
                 </h2>
                 <button
                   onClick={handleClose}
-                  className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200 w-10 h-10 flex items-center justify-center">
+                  className="text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-full transition-colors duration-200 w-10 h-10 cursor-pointer flex items-center justify-center">
                   <svg
                     className="w-5 h-5"
                     fill="none"
