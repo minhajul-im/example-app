@@ -1,5 +1,5 @@
 import { getConfig } from "@/helper";
-import { useConfig } from "@/hooks/use-config";
+import { useConfig } from "@/hooks/useConfig";
 import { Phone, Mail, MapPin, Smartphone } from "lucide-react";
 
 export const Contact = () => {

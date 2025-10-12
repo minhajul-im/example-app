@@ -1,7 +1,7 @@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { getConfig } from "@/helper";
-import { useConfig } from "@/hooks/use-config";
+import { useConfig } from "@/hooks/useConfig";
 
 export const Subscribe = () => {
   const config = useConfig();

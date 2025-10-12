@@ -2,10 +2,12 @@ import {
   Heart,
   LayoutDashboard,
   List,
+  LogIn,
   LogOut,
   Settings,
   ShoppingBag,
   User,
+  UserRound,
 } from "lucide-react";
 import { Button } from "../../ui/button";
 import {
@@ -16,48 +18,77 @@ import {
 import { DropdownMenu } from "../../ui/dropdown-menu";
 import { Link } from "react-router-dom";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { useGetUserQuery } from "@/api/queries/useUser";
+import { getGuestUserId, getUUID, isAuthenticated } from "@/helper";
+import type { UserType } from "@/type";
+import { useSignOutMutation } from "@/api/mutations/useAuth";
+import { useEffect } from "react";
 
 export const UserProfile = () => {
-  return (
-    <>
-      <DropdownMenu>
-        <DropdownMenuTrigger>
-          <Button variant="ghost" size="icon-lg" className="focus:outline-none">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent className="w-56" align="end">
-          <DropdownMenuItem>
-            <User className="h-6 w-6" /> Profile
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <LayoutDashboard className="h-6 w-6" /> Dashboard
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Heart className="h-6 w-6" /> Wishlist
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <ShoppingBag className="h-6 w-6" /> Cart
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <List className="h-6 w-6" /> Orders
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Settings className="h-6 w-6" /> Settings
-          </DropdownMenuItem>
-          <DropdownMenuItem variant="destructive">
-            <LogOut className="h-6 w-6 " />
-            Logout
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
+  const { data } = useGetUserQuery();
+  const { mutate, isPending } = useSignOutMutation();
 
-      <Button asChild>
-        <Link to="/signin">Sign In</Link>
-      </Button>
-    </>
+  useEffect(() => {
+    if (!getGuestUserId() && !isAuthenticated()) {
+      const guestUserId = getUUID();
+      localStorage.setItem("guest_user_id", guestUserId);
+    }
+  }, []);
+
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger>
+        <Button variant="ghost" size="icon-lg" className="focus:outline-none">
+          {isAuthenticated() ? (
+            <Avatar>
+              <AvatarImage
+                src={data ? (data as UserType)?.avatar || undefined : undefined}
+              />
+              <AvatarFallback>
+                {(data as UserType)?.name?.charAt(0)}
+              </AvatarFallback>
+            </Avatar>
+          ) : (
+            <UserRound className="h-6 w-6" />
+          )}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56" align="end">
+        <DropdownMenuItem>
+          <User className="h-6 w-6" /> Profile
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <LayoutDashboard className="h-6 w-6" /> Dashboard
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Heart className="h-6 w-6" /> Wishlist
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <ShoppingBag className="h-6 w-6" /> Cart
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <List className="h-6 w-6" /> Orders
+        </DropdownMenuItem>
+        <DropdownMenuItem>
+          <Settings className="h-6 w-6" /> Settings
+        </DropdownMenuItem>
+        {!isAuthenticated() ? (
+          <DropdownMenuItem>
+            <Link to="/signin" className="flex items-center gap-2">
+              <LogIn className="h-6 w-6 " />
+              Sign In
+            </Link>
+          </DropdownMenuItem>
+        ) : (
+          <DropdownMenuItem
+            onClick={() => mutate()}
+            disabled={isPending}
+            variant="destructive">
+            <LogOut className="h-6 w-6 " />
+            Sign Out
+          </DropdownMenuItem>
+        )}
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 };

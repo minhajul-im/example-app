@@ -2,8 +2,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Send, MoveUpRight } from "lucide-react";
-import { useDebounce } from "@/hooks/use-debounce";
-import { useSearchSuggestion } from "@/api/queries/useSearchSuggestion";
+import { useDebounce } from "@/hooks/useDebounce";
+import { useSearchSuggestion } from "@/api/queries/useSuggestion";
 import { useNavigate } from "react-router-dom";
 
 interface ActionType {
@@ -204,7 +204,8 @@ export const ActionSearchBar = () => {
         <AnimatePresence>
           {isFocused && result && (
             <motion.div
-              className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg overflow-hidden z-50"
+              style={{ zIndex: 1000 }}
+              className="absolute top-full left-0 right-0 mt-1 bg-background border border-border rounded-md shadow-lg overflow-hidden"
               variants={container}
               initial="hidden"
               animate="show"

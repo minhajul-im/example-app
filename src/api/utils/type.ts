@@ -10,3 +10,8 @@ export interface QueryType {
   error: unknown;
   isLoading: boolean;
 }
+
+export interface WithoutDataMutationType {
+  mutate: () => void;
+  isPending: boolean;
+}

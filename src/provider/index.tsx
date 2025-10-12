@@ -13,6 +13,7 @@ import { HelmetProvider } from "react-helmet-async";
 import { I18nextProvider } from "react-i18next";
 import { Toaster } from "react-hot-toast";
 import { ConfigProvider } from "./config";
+import { AuthProvider } from "./auth";
 
 export const AppProvider = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -23,10 +24,13 @@ export const AppProvider = ({ children }: { children: React.ReactNode }) => {
             <I18nextProvider i18n={i18next}>
               <BrowserRouter>
                 <ConfigProvider>
-                  <SeoProvider>
-                    <Toaster />
-                    {children}
-                  </SeoProvider>
+                  <AuthProvider>
+                    <SeoProvider>
+                      <Toaster />
+                      <div id="modal" />
+                      {children}
+                    </SeoProvider>
+                  </AuthProvider>
                 </ConfigProvider>
               </BrowserRouter>
             </I18nextProvider>

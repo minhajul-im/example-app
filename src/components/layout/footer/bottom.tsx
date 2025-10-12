@@ -1,5 +1,5 @@
 import { getConfig } from "@/helper";
-import { useConfig } from "@/hooks/use-config";
+import { useConfig } from "@/hooks/useConfig";
 
 export const BottomBar = () => {
   const config = useConfig();

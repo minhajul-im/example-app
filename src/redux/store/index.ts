@@ -5,10 +5,14 @@ import {
   initMessageListener,
 } from "redux-state-sync";
 import storage from "./storage";
-import ModalReducer from "../slice/edit-modal-slice";
+import ModalReducer from "../slice/editModalSlice";
+import CartReducer from "../slice/cartSlice";
+import WishlistReducer from "../slice/wishlistSlice";
 
 const appReducer = combineReducers({
   modal: ModalReducer,
+  cart: CartReducer,
+  wishlist: WishlistReducer,
 });
 
 const rootReducer = (
@@ -20,9 +24,9 @@ const rootReducer = (
 };
 
 const persistConfig = {
-  key: "root",
+  key: "e-commerce",
   storage,
-  whitelist: ["modal", "cart", "sample"],
+  whitelist: ["modal", "cart", "wishlist"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
