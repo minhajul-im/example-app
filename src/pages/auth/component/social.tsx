@@ -2,9 +2,14 @@ import { Field } from "@/components/ui/field";
 import { useSocialSignInMutation } from "@/api/mutations/useAuth";
 import { GoogleLogin, type CredentialResponse } from "@react-oauth/google";
 import { toast } from "react-hot-toast";
+import { useConfig } from "@/hooks/useConfig";
+import { getConfig } from "@/helper";
 
 export const SocialSignIn = () => {
+  const config = useConfig();
   const { mutate } = useSocialSignInMutation();
+
+  const isShow = getConfig(config, "google_login")?.value;
 
   const handleGoogleSuccess = (res: CredentialResponse) => {
     if (res?.credential) {
@@ -34,7 +39,7 @@ export const SocialSignIn = () => {
     }
   };
 
-  return (
+  return isShow == "1" ? (
     <Field>
       <GoogleLogin
         onSuccess={handleGoogleSuccess}
@@ -52,5 +57,5 @@ export const SocialSignIn = () => {
         shape="rectangular"
       />
     </Field>
-  );
+  ) : null;
 };

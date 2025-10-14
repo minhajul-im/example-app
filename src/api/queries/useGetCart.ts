@@ -39,3 +39,17 @@ export const useGetCartQuery = (): QueryType => {
 
   return { data, isLoading, error, refetch };
 };
+
+export const useGetCartSummaryQuery = (): QueryType => {
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["get_cart_summary"],
+    queryFn: async () => {
+      const response = await apiClient.get(
+        `/cart-summary/${getUserId() || getGuestUserId()}`
+      );
+      return response.data;
+    },
+  });
+
+  return { data, isLoading, error, refetch };
+};

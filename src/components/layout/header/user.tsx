@@ -24,7 +24,12 @@ import type { UserType } from "@/type";
 import { useSignOutMutation } from "@/api/mutations/useAuth";
 import { useEffect } from "react";
 
-export const UserProfile = () => {
+interface Props {
+  variant?: "default" | "mobile";
+  children?: React.ReactNode;
+}
+
+export const UserProfile = ({ variant = "default", children }: Props) => {
   const { data } = useGetUserQuery();
   const { mutate, isPending } = useSignOutMutation();
 
@@ -35,23 +40,33 @@ export const UserProfile = () => {
     }
   }, []);
 
+  const Default = () => {
+    return (
+      <Button variant="ghost" size="icon-lg" className="focus:outline-none">
+        {isAuthenticated() ? (
+          <Avatar>
+            <AvatarImage
+              src={data ? (data as UserType)?.avatar || undefined : undefined}
+            />
+            <AvatarFallback>
+              {(data as UserType)?.name?.charAt(0)}
+            </AvatarFallback>
+          </Avatar>
+        ) : (
+          <UserRound className="h-6 w-6" />
+        )}
+      </Button>
+    );
+  };
+
+  const Mobile = () => {
+    return <>{children && children}</>;
+  };
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
-        <Button variant="ghost" size="icon-lg" className="focus:outline-none">
-          {isAuthenticated() ? (
-            <Avatar>
-              <AvatarImage
-                src={data ? (data as UserType)?.avatar || undefined : undefined}
-              />
-              <AvatarFallback>
-                {(data as UserType)?.name?.charAt(0)}
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <UserRound className="h-6 w-6" />
-          )}
-        </Button>
+        {variant === "default" ? <Default /> : <Mobile />}
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end">
         <DropdownMenuItem>

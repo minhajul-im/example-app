@@ -9,6 +9,7 @@ interface Props {
   product: ProductType;
   quantity?: number;
   type: "CARD" | "DETAILS" | "MOVE_TO_CART";
+  variant?: string | null;
   onShowModal?: (
     type: string,
     title?: string,
@@ -22,10 +23,11 @@ export const CartButton = ({
   product,
   quantity = 1,
   type = "CARD",
+  variant = null,
   onShowModal,
   onHideModal,
 }: Props) => {
-  const { isLoading, fnAddToCart } = useAddToCart(product, quantity);
+  const { isLoading, fnAddToCart } = useAddToCart(product, quantity, variant);
   const { removeLoading, fnRemoveWishlist } = useRemoveFromWishlist(product);
   const style = {
     CARD: {
@@ -65,7 +67,7 @@ export const CartButton = ({
       size={style[type].size}
       variant={style[type].variant}
       onClick={() => {
-        if (product?.variant_product === 1) {
+        if (product?.variant_product == 1) {
           if (onShowModal) {
             onShowModal("DETAILS", product?.name, "max-w-4xl", product?.id);
           }

@@ -10,6 +10,8 @@ import { ProductsPage } from "./products";
 import { ProductDetailsPage } from "./details";
 import { WishlistPage } from "./wishlist";
 import { CartPage } from "./cart";
+import { CategoriesProductPage } from "./categories/product";
+import { TranslatePage } from "./TRANSLATE";
 
 export const AppRoutes = () => {
   return (
@@ -19,11 +21,13 @@ export const AppRoutes = () => {
       <Route path="/signin" element={<SignInPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/search" element={<SearchPage />} />
-      <Route path="/categories/:id/:name" element={<CategoriesPage />} />
+      <Route path="/categories" element={<CategoriesPage />} />
+      <Route path="/categories/:id/:name" element={<CategoriesProductPage />} />
       <Route path="/products" element={<ProductsPage />} />
       <Route path="/products/:id/:name" element={<ProductDetailsPage />} />
       <Route path="/wishlist" element={<WishlistPage />} />
       <Route path="/cart" element={<CartPage />} />
+      <Route path="/translate" element={<TranslatePage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

@@ -5,8 +5,10 @@ import { SectionTitle } from "@/components/common/section-title";
 import { ProductCard, ProductCardSkeleton } from "@/components/card/product";
 import type { ProductType } from "@/type";
 import { NoDataFound } from "@/components/common/no-data-found";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export const FlashDealSection = () => {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetProductsForHome("flash-deal");
 
   const products = (data?.data as ProductType[]) || [];
@@ -16,7 +18,7 @@ export const FlashDealSection = () => {
       className={`mb-10 md:mb-20 container mx-auto ${
         products?.length === 0 && !isLoading && "hidden"
       }`}>
-      <SectionTitle title="Flash Deal" />
+      <SectionTitle title={t.flash_deal} />
       <CardLayout>
         {isLoading ? (
           Array.from({ length: 5 }).map((_, i) => (

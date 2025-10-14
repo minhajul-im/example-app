@@ -31,24 +31,24 @@ export const ImageSection = ({
       <div className="flex gap-1 md:gap-2">
         {images?.length > 1 && (
           <div
-            className={`w-12 md:w-20 flex flex-col gap-2 max-h-[250px] md:max-h-[${
+            className={`w-12 md:w-20 mb-4 flex flex-col gap-2 max-h-[250px] md:max-h-[${
               height || "620px"
             }] overflow-y-auto scrollbar-thin overflow-x-hidden scrollbar-thumb-gray-300 scrollbar-track-gray-100 scrollbar-hide`}>
             {images?.map((image, index) => (
               <button
                 key={index}
                 onClick={() => {
-                  setImg(image.path);
+                  setImg(image?.path);
                 }}
                 className={cn(
                   "flex-shrink-0 w-12 h-12 md:w-20 md:h-20 rounded-lg overflow-hidden border-2 transition-all",
-                  image.path === img
+                  image?.path === img
                     ? "border-primary ring-2 ring-primary/30"
                     : "border-border hover:border-primary/50"
                 )}
                 aria-label={`View image ${index + 1}`}>
                 <img
-                  src={getImageUrl(image.path)}
+                  src={getImageUrl(image?.path)}
                   alt={`${product?.name} ${index + 1}`}
                   className="w-full h-full object-cover"
                 />
@@ -57,7 +57,7 @@ export const ImageSection = ({
           </div>
         )}
         <div className="flex-1 relative group">
-          <div className="aspect-[16/13] overflow-hidden rounded-xl border border-border shadow-lg">
+          <div className="aspect-[16/17] overflow-hidden rounded-xl border border-border shadow-lg">
             {img ? (
               <MagnifyImage
                 src={getImageUrl(img)}
@@ -76,7 +76,7 @@ export const ImageSection = ({
             />
           </div>
 
-          <Discount product={product} />
+          <Discount product={product} type="DETAILS" />
         </div>
       </div>
     </div>

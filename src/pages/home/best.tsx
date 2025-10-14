@@ -6,13 +6,13 @@ import { ProductCard, ProductCardSkeleton } from "@/components/card/product";
 import type { ProductType } from "@/type";
 import { useConfig } from "@/hooks/useConfig";
 import { getConfig } from "@/helper";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export const BestSellerSection = () => {
-  const { data, isLoading } = useGetProductsForHome("best-seller");
-
   const config = useConfig();
+  const { t } = useTranslation();
+  const { data, isLoading } = useGetProductsForHome("best-seller");
   const isShow = getConfig(config, "best_selling")?.value as string;
-
   const products = (data?.data as ProductType[]) || [];
 
   return isShow ? (
@@ -20,7 +20,7 @@ export const BestSellerSection = () => {
       className={`mb-10 md:mb-20 container mx-auto  ${
         products?.length === 0 && !isLoading && "hidden"
       }`}>
-      <SectionTitle title="Best Sellers" />
+      <SectionTitle title={t.best_sellers} />
       <CardLayout>
         {isLoading
           ? Array.from({ length: 5 }).map((_, i) => (

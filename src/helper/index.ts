@@ -107,6 +107,14 @@ export const getUserId = () => {
   return null;
 };
 
+export const getLangCode = () => {
+  if (typeof window !== "undefined") {
+    const code = localStorage.getItem("code");
+    return code;
+  }
+  return null;
+};
+
 export const isAuthenticated = () => {
   if (typeof window !== "undefined") {
     const token = localStorage.getItem("token");
@@ -284,4 +292,17 @@ export const hasDiscount = (
     return removeCurrencySymbol(strokedPrice) - removeCurrencySymbol(mainPrice);
   }
   return 0;
+};
+
+type MergedType = string | null;
+export const getVariant = (color: MergedType, size: MergedType): MergedType => {
+  if (color && size) {
+    return `${color}-${size}`;
+  } else if (color && !size) {
+    return color;
+  } else if (!color && size) {
+    return size;
+  } else {
+    return null;
+  }
 };

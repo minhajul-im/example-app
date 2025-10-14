@@ -2,16 +2,13 @@ import { BaseLayout } from "@/components/layout/base-layout";
 import { useSelector } from "react-redux";
 import type { RootStateType } from "@/redux/store";
 import { CartItem } from "./item";
-import { CartSummary } from "@/components/common/summary";
+import { CartSummary } from "@/components/card/summary";
 import { ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SectionTitle } from "@/components/common/section-title";
 import { Link } from "react-router-dom";
-import { useGetCartQuery } from "@/api/queries/useGetCart";
 
 export const CartPage = () => {
-  useGetCartQuery();
-
   const cart = useSelector((state: RootStateType) => state.cart);
 
   return (
@@ -32,7 +29,7 @@ export const CartPage = () => {
             </Button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-8">
+          <div className="grid grid-cols-1 mx-4 md:mx-0 lg:grid-cols-3 gap-4 lg:gap-8">
             <div className="lg:col-span-2">
               <div className="space-y-3 lg:space-y-4">
                 {cart?.items?.map((item) => (

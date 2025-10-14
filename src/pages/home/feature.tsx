@@ -4,8 +4,10 @@ import { AnimationWrapper } from "@/components/common/animation-wrapper";
 import { CardLayout } from "@/components/common/card-layout";
 import { SectionTitle } from "@/components/common/section-title";
 import { ProductCard, ProductCardSkeleton } from "@/components/card/product";
+import { useTranslation } from "@/hooks/useTranslation";
 
 export const FeaturedProductsSection = () => {
+  const { t } = useTranslation();
   const { data, isLoading } = useGetProductsForHome("featured");
 
   const products = (data?.data as ProductType[]) || [];
@@ -14,7 +16,7 @@ export const FeaturedProductsSection = () => {
       className={`mb-10 md:mb-20 container mx-auto ${
         products?.length === 0 && !isLoading && "hidden"
       }`}>
-      <SectionTitle title="Featured Products" />
+      <SectionTitle title={t.featured_products} />
       <CardLayout>
         {isLoading
           ? Array.from({ length: 5 }).map((_, i) => (

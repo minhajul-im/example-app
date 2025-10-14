@@ -1,9 +1,8 @@
 import { ClipboardCheck, Image } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "../ui/badge";
 import type { ProductType } from "@/type";
 import { Skeleton } from "../common/skeleton";
-import { getImageUrl, hasDiscount, slugify } from "@/helper";
+import { getImageUrl, slugify } from "@/helper";
 import { Link } from "react-router";
 import { CartButton } from "../common/cart-button";
 import { WishlistButton } from "../common/wishlist-button";
@@ -11,6 +10,7 @@ import { DetailsModal } from "./details-modal";
 import { useModal } from "@/hooks/useModal";
 import { ModalWrapper } from "../common/modal-wrapper";
 import { Review } from "./review";
+import { Discount } from "../common/discount";
 
 interface Props {
   product: ProductType;
@@ -24,11 +24,7 @@ export const ProductCard = ({ product }: Props) => {
       <div className="group relative overflow-hidden rounded-lg border bg-card transition-all hover:scale-105 cursor-pointer duration-300">
         <WishlistButton product={product} size="DEFAULT" />
 
-        {hasDiscount(product?.main_price, product?.stroked_price) > 0 && (
-          <Badge className="absolute left-2 top-2 z-10" variant="destructive">
-            {hasDiscount(product?.main_price, product?.stroked_price)}
-          </Badge>
-        )}
+        <Discount product={product} type="CARD" />
 
         <Link to={`/products/${product?.id}/${slugify(product?.name)}`}>
           <div className="relative aspect-[16/12] overflow-hidden bg-muted">

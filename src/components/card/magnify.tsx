@@ -57,7 +57,7 @@ export const MagnifyImage = ({
     <div
       ref={containerRef}
       className={cn(
-        "relative inline-block overflow-hidden h-full w-full rounded-xl",
+        "relative cursor-crosshair aspect-[16/17] inline-block overflow-hidden h-full w-full rounded-xl",
         containerClassName
       )}
       onMouseEnter={handleMouseEnter}
@@ -67,14 +67,14 @@ export const MagnifyImage = ({
         ref={sourceRef}
         src={src}
         alt={alt}
-        className={cn("w-full h-auto rounded-xl", className)}
+        className={cn("w-full h-full rounded-xl", className)}
       />
 
       <img
         src={src}
         alt={alt}
         className={cn(
-          "absolute pointer-events-none transition-opacity duration-200 ease-in-out",
+          "absolute pointer-events-none aspect-[16/17] transition-opacity duration-200 ease-in-out",
           "rounded-xl",
           className
         )}

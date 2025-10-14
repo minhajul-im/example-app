@@ -6,18 +6,7 @@ import { Image } from "lucide-react";
 import { Skeleton } from "@/components/common/skeleton";
 import { useCategories } from "@/api/queries/useCategories";
 import { Link } from "react-router-dom";
-
-interface CategoryType {
-  id: number;
-  name: string;
-  banner: string;
-  icon: string;
-  number_of_children: number;
-  links: {
-    products: string;
-    sub_categories: string;
-  };
-}
+import type { CategoryType } from "@/type";
 
 export const CategoriesSection = () => {
   const { data, isLoading } = useCategories();
