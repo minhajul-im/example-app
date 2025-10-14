@@ -8,11 +8,13 @@ import storage from "./storage";
 import ModalReducer from "../slice/editModalSlice";
 import CartReducer from "../slice/cartSlice";
 import WishlistReducer from "../slice/wishlistSlice";
+import TranslateReducer from "../slice/translateSlice";
 
 const appReducer = combineReducers({
   modal: ModalReducer,
   cart: CartReducer,
   wishlist: WishlistReducer,
+  translate: TranslateReducer,
 });
 
 const rootReducer = (
@@ -26,7 +28,7 @@ const rootReducer = (
 const persistConfig = {
   key: "e-commerce",
   storage,
-  whitelist: ["modal", "cart", "wishlist"],
+  whitelist: ["modal", "cart", "wishlist", "translate"],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);

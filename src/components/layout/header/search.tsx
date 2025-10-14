@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, forwardRef } from "react";
 import { Input } from "@/components/ui/input";
 import { motion, AnimatePresence } from "framer-motion";
 import { Search, Send, MoveUpRight } from "lucide-react";
@@ -18,7 +18,7 @@ interface SearchResultType {
   actions: ActionType[];
 }
 
-export const ActionSearchBar = () => {
+export const ActionSearchBar = forwardRef<HTMLInputElement | null>((_, ref) => {
   const navigate = useNavigate();
   const [query, setQuery] = useState("");
   const [result, setResult] = useState<SearchResultType | null>(null);
@@ -157,6 +157,7 @@ export const ActionSearchBar = () => {
     <div className="w-full max-w-xl mx-auto relative" ref={containerRef}>
       <div className="relative">
         <Input
+          ref={ref || undefined}
           type="text"
           placeholder="Search..."
           value={query}
@@ -233,4 +234,6 @@ export const ActionSearchBar = () => {
       </div>
     </div>
   );
-};
+});
+
+ActionSearchBar.displayName = "ActionSearchBar";

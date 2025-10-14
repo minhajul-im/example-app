@@ -19,7 +19,11 @@ import {
 import { useEffect } from "react";
 import { useGetCartQuery } from "@/api/queries/useGetCart";
 
-export const useAddToCart = (item: ProductType, quantity: number = 1) => {
+export const useAddToCart = (
+  item: ProductType,
+  quantity: number = 1,
+  variant: string | null = null
+) => {
   const dispatch = useDispatch();
   const { mutate } = useAddToCartMutation();
   const { startLoadingFn, stopLoadingFn } = useLoading();
@@ -40,7 +44,7 @@ export const useAddToCart = (item: ProductType, quantity: number = 1) => {
       mainPrice: item?.calculable_price,
       image: item?.thumbnail_image,
       showPrice: item?.main_price,
-      variant: item?.variant || null,
+      variant: variant,
       quantity,
     };
 
@@ -49,7 +53,7 @@ export const useAddToCart = (item: ProductType, quantity: number = 1) => {
     const formData = new FormData();
     formData.append("id", item?.id.toString());
     formData.append("quantity", quantity.toString());
-    formData.append("variant", item?.variant || "");
+    formData.append("variant", variant || "");
     if (getUserId()) {
       formData.append("user_id", getUserId() as string);
     } else {

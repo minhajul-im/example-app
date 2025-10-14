@@ -4,17 +4,22 @@ import { ClipboardCheck } from "lucide-react";
 import type { ProductDetailsType, ProductType } from "@/type";
 import { CartButton } from "@/components/common/cart-button";
 import { VariantCard } from "@/components/card/variant";
-import { getImageUrl } from "@/helper";
+import { getImageUrl, getVariant } from "@/helper";
 import { Review } from "@/components/card/review";
 import { FeatureCards } from "@/pages/details/feature";
+import { Discount } from "@/components/common/discount";
 
 interface Props {
   product: ProductDetailsType;
   onVariantImageChange?: (image: string) => void;
 }
 
+type StateType = string | null;
+
 export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
   const [quantity, setQuantity] = useState<number>(1);
+  const [selectedSize, setSelectedSize] = useState<StateType>(null);
+  const [selectedColor, setSelectedColor] = useState<StateType>(null);
   const [displayPrice, setDisplayPrice] = useState<string>(
     product?.variants?.[0]?.variant_price_string || "0"
   );
@@ -26,7 +31,7 @@ export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
   const hasBrand = product?.brand?.name || product?.brand?.logo;
 
   return (
-    <div className="space-y-1.5 md:space-y-4 md:col-span-5">
+    <div className="space-y-1.5 md:space-y-4 md:col-span-6">
       <div>
         <h1 className="text-xl md:text-2xl line-clamp-2 lg:text-3xl font-bold text-foreground leading-tight">
           {product?.name}
@@ -45,11 +50,7 @@ export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
             </span>
           )}
         </div>
-        {product?.discount_price && (
-          <p className="text-sm text-green-600 font-medium">
-            You save {product?.discount_price}
-          </p>
-        )}
+        <Discount product={product} type="INFO" />
       </div>
 
       {hasBrand && (
@@ -74,6 +75,10 @@ export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
       <VariantCard
         product={product}
         quantity={quantity}
+        selectedColor={selectedColor}
+        selectedSize={selectedSize}
+        setSelectedColor={setSelectedColor}
+        setSelectedSize={setSelectedSize}
         setQuantity={setQuantity}
         setDisplayPrice={setDisplayPrice}
         onVariantImageChange={onVariantImageChange}
@@ -85,6 +90,7 @@ export const ProductInfo = ({ product, onVariantImageChange }: Props) => {
             product={product as unknown as ProductType}
             quantity={quantity}
             type="DETAILS"
+            variant={getVariant(selectedColor, selectedSize)}
           />
         </div>
 

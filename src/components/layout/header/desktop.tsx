@@ -1,19 +1,15 @@
-import { Heart, Image, ShoppingCart } from "lucide-react";
+import { Heart, ShoppingCart } from "lucide-react";
 import { Link } from "react-router-dom";
-import { getImageUrl } from "@/helper";
 import { Button } from "@/components/ui/button";
 import { ActionSearchBar } from "./search";
-import { LanguageSwitcher } from "./language";
 import { UserProfile } from "./user";
 import { useSelector } from "react-redux";
 import type { RootStateType } from "@/redux/store";
-import { useGetLogo } from "@/api/queries/useGetImage";
 import { MegaMenu } from "./mega-menu";
-import { Skeleton } from "@/components/common/skeleton";
+import { LanguageSwitcher } from "./language";
+import { Logo } from "./logo";
 
 export const HeaderDesktop = () => {
-  const { data, isLoading } = useGetLogo();
-  const logo = data?.[0];
   const cart = useSelector((state: RootStateType) => state.cart);
   const wishlist = useSelector((state: RootStateType) => state.wishlist);
 
@@ -22,23 +18,7 @@ export const HeaderDesktop = () => {
       <div className="h-16 md:flex items-center justify-center w-full px-1 md:px-0 bg-background">
         <div className="container flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 justify-start">
-            <Link to="/">
-              <div className="w-40 h-12 relative overflow-hidden">
-                {isLoading ? (
-                  <Skeleton className="w-full h-full" />
-                ) : logo ? (
-                  <img
-                    src={getImageUrl(logo as string)}
-                    alt="logo"
-                    className="absolute w-full h-full object-contain"
-                  />
-                ) : (
-                  <div className="absolute w-full h-full flex items-center justify-center">
-                    <Image className="w-6 h-6 text-primary" />
-                  </div>
-                )}
-              </div>
-            </Link>
+            <Logo type="DESKTOP" />
           </div>
 
           <div className="hidden md:flex flex-1 justify-center items-center">
@@ -46,10 +26,7 @@ export const HeaderDesktop = () => {
           </div>
 
           <div className="flex items-center gap-3 w-full md:w-auto justify-end">
-            <div className="hidden md:block">
-              <LanguageSwitcher />
-            </div>
-
+            <LanguageSwitcher />
             <Link to="/wishlist" title="Wishlist">
               <Button variant="ghost" size="icon-lg" className="relative">
                 <div title="Wishlist" className="relative">

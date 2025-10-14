@@ -73,7 +73,7 @@ export const ProductDetailsPage = () => {
           ]}
         />
         <div className="grid grid-cols-1 md:grid-cols-12 gap-8 md:gap-8 mx-4 md:mx-auto">
-          <div className="md:col-span-7">
+          <div className="md:col-span-6">
             <ImageSection
               product={product}
               selectedVariantImage={selectedVariantImage}

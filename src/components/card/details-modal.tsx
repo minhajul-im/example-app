@@ -7,27 +7,45 @@ import { ImageSection } from "./image";
 import { useState } from "react";
 import { Review } from "./review";
 import { CartButton } from "../common/cart-button";
+import { Skeleton } from "../common/skeleton";
+import { getVariant } from "@/helper";
 
 interface Props {
   id: string;
   onHideModal: () => void;
 }
+interface DetailsModalResponse {
+  data: ProductDetailsResponse | undefined;
+  isLoading: boolean;
+  error: unknown;
+}
+type StateType = string | null;
 
 export const DetailsModal = ({ id, onHideModal }: Props) => {
+  const navigate = useNavigate();
   const [quantity, setQuantity] = useState<number>(1);
   const [displayPrice, setDisplayPrice] = useState<string>("0");
-  const [selectedVariantImage, setSelectedVariantImage] = useState<
-    string | null
-  >(null);
+  const [selectedSize, setSelectedSize] = useState<StateType>(null);
+  const [selectedColor, setSelectedColor] = useState<StateType>(null);
+  const [selectedVariantImage, setSelectedVariantImage] =
+    useState<StateType>(null);
+  const { data, isLoading } = useGetProductDetails(
+    id as string
+  ) as DetailsModalResponse;
 
-  const navigate = useNavigate();
-  const { data, isLoading } = useGetProductDetails(id as string) as {
-    data: ProductDetailsResponse | undefined;
-    isLoading: boolean;
-    error: unknown;
-  };
-
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 gap-1 md:gap-3 bg-background">
+        <Skeleton className="w-full h-[320px]" />
+        <div className="space-y-1.5 md:space-y-2.5">
+          <Skeleton className="w-full h-8" />
+          <Skeleton className="w-full h-6" />
+          <Skeleton className="w-full h-5" />
+          <Skeleton className="w-full h-10" />
+          <Skeleton className="w-full h-10" />
+        </div>
+      </div>
+    );
 
   if (!data?.data?.[0]) navigate("/products");
 
@@ -51,6 +69,10 @@ export const DetailsModal = ({ id, onHideModal }: Props) => {
           product={product}
           quantity={quantity}
           setQuantity={setQuantity}
+          selectedSize={selectedSize}
+          selectedColor={selectedColor}
+          setSelectedSize={setSelectedSize}
+          setSelectedColor={setSelectedColor}
           setDisplayPrice={setDisplayPrice}
           onVariantImageChange={setSelectedVariantImage}
         />
@@ -60,7 +82,8 @@ export const DetailsModal = ({ id, onHideModal }: Props) => {
             product={product as unknown as ProductType}
             quantity={quantity}
             type="DETAILS"
-            onShowModal={onHideModal}
+            variant={getVariant(selectedColor, selectedSize)}
+            onHideModal={onHideModal}
           />
         </div>
       </div>

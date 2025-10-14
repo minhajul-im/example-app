@@ -17,8 +17,8 @@ export const SectionTitle = ({
 }: Props) => {
   return (
     <div
-      className={`flex justify-between items-start sm:items-end gap-4 mb-6 md:mb-8 px-4 md:px-0 ${className}`}>
-      <h2 className="text-xl font-bold md:text-3xl lg:text-4xl text-primary tracking-tight flex">
+      className={`flex flex-wrap md:justify-between items-start sm:items-end md:gap-2 mb-6 md:mb-8 px-4 md:px-0 ${className}`}>
+      <h2 className="text-lg font-bold md:text-3xl lg:text-4xl text-primary tracking-tight flex">
         {title}
         <span className="w-16 md:w-28 h-0.5 md:h-1 bg-primary rounded-full mt-5 md:mt-8" />
       </h2>

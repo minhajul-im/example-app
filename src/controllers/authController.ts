@@ -1,11 +1,12 @@
 import { useSignInMutation, useSignUpMutation } from "@/api/mutations/useAuth";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
-import { validateBangladeshiPhone } from "@/helper/phoneValidation";
+import { usePhoneValidation } from "@/hooks/usePhoneValidation";
 
 export const useSignIn = () => {
   const [error, setError] = useState<string>("");
   const { mutate, isPending } = useSignInMutation();
+  const { validateBangladeshiPhone } = usePhoneValidation();
 
   const fnSignIn = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,6 +32,7 @@ export const useSignUp = () => {
   const navigate = useNavigate();
   const [error, setError] = useState<string>("");
   const { mutate, isPending } = useSignUpMutation();
+  const { validateBangladeshiPhone } = usePhoneValidation();
 
   const fnSignUp = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();

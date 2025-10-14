@@ -7,8 +7,10 @@ import {
 import type { ProductType, StateSyncType } from "@/type";
 import { useSelector } from "react-redux";
 import type { RootStateType } from "@/redux/store";
-import { isExistingItem } from "@/helper";
+import { isAuthenticated, isExistingItem } from "@/helper";
 import { Button } from "../ui/button";
+import { toast } from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   product: ProductType;
@@ -25,6 +27,7 @@ export const WishlistButton = ({
   size = "DEFAULT",
   onRemove,
 }: Props) => {
+  const navigate = useNavigate();
   const { addLoading, fnAddToWishlist } = useAddToWishlist(product);
   const { removeLoading, fnRemoveWishlist } = useRemoveFromWishlist(
     product as unknown as StateSyncType
@@ -33,19 +36,28 @@ export const WishlistButton = ({
   const wishlist = useSelector((state: RootStateType) => state.wishlist);
   const isWishListed = isExistingItem(wishlist?.items, product);
 
+  const handleCartButton = () => {
+    if (isWishListed) {
+      fnRemoveWishlist();
+      return;
+    } else {
+      if (!isAuthenticated()) {
+        toast.error("Please login to add to wishlist");
+        navigate("/signin");
+        return;
+      } else {
+        fnAddToWishlist();
+        if (onRemove) {
+          onRemove();
+        }
+      }
+    }
+  };
+
   if (size === "CART-BUTTON-SMALL") {
     return (
       <button
-        onClick={() => {
-          if (isWishListed) {
-            fnRemoveWishlist();
-          } else {
-            fnAddToWishlist();
-            if (onRemove) {
-              onRemove();
-            }
-          }
-        }}
+        onClick={handleCartButton}
         disabled={addLoading || removeLoading}
         className={`md:hidden absolute left-0.5 top-0.5 z-10 flex h-5 w-5 items-center justify-center rounded-full bg-accent backdrop-blur-sm transition-all hover:bg-background hover:scale-110 cursor-pointer ${
           addLoading || removeLoading ? "opacity-50 cursor-not-allowed" : ""

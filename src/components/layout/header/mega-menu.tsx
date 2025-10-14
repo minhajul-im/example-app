@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { useMenuData } from "./useMenu";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Image, ChevronLeft, ChevronRight } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -15,17 +15,19 @@ import {
 import { getImageUrl } from "@/helper";
 import { Skeleton } from "@/components/common/skeleton";
 
+type Props = React.ComponentPropsWithoutRef<"li"> & {
+  href: string;
+  highlight?: boolean;
+  onClick?: () => void;
+};
+
 const MegaMenuListItem = ({
   title,
   href,
   highlight = false,
   onClick,
   ...props
-}: React.ComponentPropsWithoutRef<"li"> & {
-  href: string;
-  highlight?: boolean;
-  onClick?: () => void;
-}) => {
+}: Props) => {
   return (
     <li {...props}>
       <NavigationMenuLink asChild>
@@ -43,6 +45,8 @@ const MegaMenuListItem = ({
 };
 
 export const MegaMenu = () => {
+  const location = useLocation();
+  const pathname = location?.pathname;
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(false);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -151,6 +155,7 @@ export const MegaMenu = () => {
                         <NavigationMenuTrigger className="font-medium hover:text-primary transition-colors hover:underline cursor-pointer">
                           {item?.name}
                         </NavigationMenuTrigger>
+
                         <NavigationMenuContent>
                           <div className="bg-background rounded md:w-[768px] lg:w-[1024px] xl:w-[1280px] 2xl:w-[1536px] mx-auto max-h-[600px] overflow-y-auto overflow-x-auto">
                             <div className="flex gap-6 p-5 w-full overflow-x-auto">
@@ -165,7 +170,7 @@ export const MegaMenu = () => {
                                         key={linkIdx}
                                         title={link?.name}
                                         href={link?.href}
-                                        highlight={link?.highlight}
+                                        highlight={pathname === link?.href}
                                         onClick={closeMenu}
                                       />
                                     ))}

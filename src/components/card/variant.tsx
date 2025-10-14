@@ -1,6 +1,6 @@
 import type { ProductDetailsType } from "@/type";
 import { cn } from "@/lib/utils";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import {
   findVariantByColorAndSize,
   getCurrentStock,
@@ -11,8 +11,12 @@ import { Button } from "../ui/button";
 import { Minus, Plus } from "lucide-react";
 
 interface Props {
-  product: ProductDetailsType;
   quantity: number;
+  product: ProductDetailsType;
+  selectedColor: string | null;
+  selectedSize: string | null;
+  setSelectedColor: (color: string) => void;
+  setSelectedSize: (size: string) => void;
   setQuantity: (quantity: number) => void;
   setDisplayPrice: (price: string) => void;
   onVariantImageChange?: (image: string) => void;
@@ -22,12 +26,13 @@ export const VariantCard = ({
   product,
   quantity,
   setQuantity,
+  selectedColor,
+  selectedSize,
+  setSelectedColor,
+  setSelectedSize,
   setDisplayPrice,
   onVariantImageChange,
 }: Props) => {
-  const [selectedColor, setSelectedColor] = useState<string | null>(null);
-  const [selectedSize, setSelectedSize] = useState<string | null>(null);
-
   const handleQuantityChange = (newQuantity: number): void => {
     const currentStock = getCurrentStock(product, selectedColor, selectedSize);
     if (newQuantity >= 1 && newQuantity <= currentStock?.stock) {
@@ -85,7 +90,13 @@ export const VariantCard = ({
       setDisplayPrice(firstVariant?.variant_price_string);
       onVariantImageChange?.(firstVariant?.variant_image);
     }
-  }, [product, onVariantImageChange, setDisplayPrice]);
+  }, [
+    product,
+    onVariantImageChange,
+    setDisplayPrice,
+    setSelectedColor,
+    setSelectedSize,
+  ]);
 
   useEffect(() => {
     const currentStock = getCurrentStock(product, selectedColor, selectedSize);
@@ -197,7 +208,7 @@ export const VariantCard = ({
             selectedColor,
             selectedSize
           );
-          const isOutOfStock = currentStock.stock === 0;
+          const isOutOfStock = currentStock?.stock === 0;
 
           return (
             <div className="flex items-center gap-2">
